@@ -9,12 +9,14 @@ class LoginPage(BasePage):
     Inherits all Selenium methods from BasePage.
     """
 
-    # ── Locators — defined as class constants ────────────
-    USERNAME_INPUT  = (By.ID,   "user-name")
-    PASSWORD_INPUT  = (By.ID,   "password")
-    LOGIN_BUTTON    = (By.ID,   "login-button")
+    # ── Locators ─────────────────────────────────────────
+    USERNAME_INPUT  = (By.ID, "user-name")
+    PASSWORD_INPUT  = (By.ID, "password")
+    LOGIN_BUTTON    = (By.ID, "login-button")
     ERROR_MESSAGE   = (By.CSS_SELECTOR, "[data-test='error']")
-    LOGO            = (By.CLASS_NAME,   "login_logo")
+    LOGO            = (By.CLASS_NAME, "login_logo")
+    MENU_BUTTON     = (By.ID, "react-burger-menu-btn")
+    LOGOUT_LINK     = (By.ID, "logout_sidebar_link")
 
     # ── Actions ──────────────────────────────────────────
     def enter_username(self, username):
@@ -37,9 +39,18 @@ class LoginPage(BasePage):
         return self.get_text(*self.ERROR_MESSAGE)
 
     def is_login_page_displayed(self):
-        """Returns True if logo is visible — confirms login page loaded"""
+        """Returns True if logo visible — confirms login page loaded"""
         return self.is_visible(*self.LOGO)
 
     def is_logged_in(self):
-        """Returns True if URL changed to /inventory — login success"""
+        """Returns True if URL changed to /inventory"""
         return "/inventory" in self.get_current_url()
+
+    def logout(self):
+        """Opens menu and clicks logout"""
+        self.click(*self.MENU_BUTTON)
+        self.click(*self.LOGOUT_LINK)
+
+    def is_on_login_page(self):
+        """Returns True if back on login page after logout"""
+        return self.is_visible(*self.LOGO)

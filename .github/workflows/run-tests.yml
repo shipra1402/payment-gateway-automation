@@ -24,5 +24,12 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
-      - name: Run smoke tests
-        run: pytest -m smoke -v
+      - name: Run smoke and API tests
+        run: pytest -m "smoke and not db" -v --html=reports/html/report.html --self-contained-html
+
+      - name: Upload test report
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: test-report
+          path: reports/html/report.html

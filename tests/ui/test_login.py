@@ -8,7 +8,7 @@ class TestLogin:
     Site: https://www.saucedemo.com
     """
 
-    # ── TC01: Valid login — happy path ───────────────────
+    # ── TC01: Valid login ────────────────────────────────
     @pytest.mark.ui
     @pytest.mark.smoke
     def test_valid_login(self, driver, config):
@@ -20,7 +20,7 @@ class TestLogin:
         assert page.is_logged_in(), \
             "Login failed — /inventory not in URL"
 
-    # ── TC02: Locked user — negative test ───────────────
+    # ── TC02: Locked user ────────────────────────────────
     @pytest.mark.ui
     @pytest.mark.regression
     def test_locked_user_login(self, driver, config):
@@ -33,7 +33,7 @@ class TestLogin:
         assert "locked out" in error.lower(), \
             f"Expected locked error, got: {error}"
 
-    # ── TC03: Wrong password — negative test ────────────
+    # ── TC03: Wrong password ─────────────────────────────
     @pytest.mark.ui
     @pytest.mark.regression
     def test_wrong_password(self, driver, config):
@@ -47,7 +47,7 @@ class TestLogin:
                in error, \
             f"Expected mismatch error, got: {error}"
 
-    # ── TC04: Empty username — edge case ────────────────
+    # ── TC04: Empty username ─────────────────────────────
     @pytest.mark.ui
     @pytest.mark.regression
     def test_empty_username(self, driver, config):
@@ -57,7 +57,7 @@ class TestLogin:
         assert "Username is required" in error, \
             f"Expected required error, got: {error}"
 
-    # ── TC05: Empty password — edge case ────────────────
+    # ── TC05: Empty password ─────────────────────────────
     @pytest.mark.ui
     @pytest.mark.regression
     def test_empty_password(self, driver, config):
@@ -68,3 +68,54 @@ class TestLogin:
         error = page.get_error_message()
         assert "Password is required" in error, \
             f"Expected required error, got: {error}"
+
+    # ── TC06: Both fields empty ──────────────────────────
+    @pytest.mark.ui
+    @pytest.mark.regression
+    def test_empty_username_and_password(self, driver, config):
+        page = LoginPage(driver)
+        page.login("", "")
+        error = page.get_error_message()
+        assert "Username is required" in error, \
+            f"Expected required error, got: {error}"
+
+    # ── TC07: SQL injection attempt ──────────────────────
+    @pytest.mark.ui
+    @pytest.mark.regression
+    def test_sql_injection_in_username(self, driver, config):
+        page = LoginPage(driver)
+        page.login("' OR '1'='1", "anything")
+        error = page.get_error_message()
+        assert error is not None and len(error) > 0, \
+            "Expected error for SQL injection attempt"
+
+    # ── TC08: Whitespace username ────────────────────────
+    @pytest.mark.ui
+    @pytest.mark.regression
+    def test_whitespace_username(self, driver, config):
+        page = LoginPage(driver)
+        page.login("   ", config["USERS"]["password"])
+        error = page.get_error_message()
+        assert error is not None and len(error) > 0, \
+            "Expected error for whitespace username"
+
+    # ── TC09: Login then logout ──────────────────────────
+    @pytest.mark.ui
+    @pytest.mark.regression
+    def test_logout_after_login(self, driver, config):
+        page = LoginPage(driver)
+        page.login(
+            config["USERS"]["standard_user"],
+            config["USERS"]["password"]
+        )
+        assert page.is_logged_in(), "Login failed"
+        page.logout()
+        assert page.is_on_login_page(), \
+            "Expected login page after logout"
+
+    # ── TC10: Login page title check ─────────────────────
+    @pytest.mark.ui
+    @pytest.mark.smoke
+    def test_login_page_title(self, driver, config):
+        assert "Swag Labs" in driver.title, \
+            f"Expected 'Swag Labs' in title, got: {driver.title}"
