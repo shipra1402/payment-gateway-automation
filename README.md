@@ -1,5 +1,6 @@
-# Payment Gateway Automation Framework
 
+ Payment Gateway Automation Framework
+![Tests](https://github.com/shipra1402/payment-gateway-automation/actions/workflows/run-tests.yml/badge.svg)
 ![Python](https://img.shields.io/badge/Python-3.14-blue)
 ![Selenium](https://img.shields.io/badge/Selenium-4.x-green)
 ![pytest](https://img.shields.io/badge/pytest-9.x-orange)
