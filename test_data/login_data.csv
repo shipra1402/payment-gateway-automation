@@ -1,0 +1,21 @@
+username,password,expected_result,test_id
+standard_user,secret_sauce,success,TC01
+locked_out_user,secret_sauce,locked out,TC02
+standard_user,wrongpassword123,do not match,TC03
+,secret_sauce,Username is required,TC04
+standard_user,,Password is required,TC05
+problem_user,secret_sauce,success,TC06
+performance_glitch_user,secret_sauce,success,TC07
+
+
+
+
+
+
+
+
+
+
+
+
+
