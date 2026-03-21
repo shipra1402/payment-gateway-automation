@@ -80,3 +80,9 @@ allure serve reports/allure
 ## Test Sites
 - **UI**: https://www.saucedemo.com
 - **API**: https://reqres.in
+
+## Test Execution Report
+
+![Allure Report](docs/allure_report.png)
+
+> 19 test cases | 100% Pass Rate | UI + API Coverage
