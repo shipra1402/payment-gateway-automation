@@ -2,44 +2,59 @@ import requests
 
 
 class APIHelper:
+    """
+    API Helper for e-commerce REST API tests.
+    Site: https://jsonplaceholder.typicode.com
+    Simulates product, order, and user API operations.
+    """
 
     BASE_URL = "https://jsonplaceholder.typicode.com"
 
-    def get_user(self, user_id):
-        """GET single user by ID"""
-        url = f"{self.BASE_URL}/users/{user_id}"
-        response = requests.get(url)
-        return response
+    # ── PRODUCTS ─────────────────────────────────────────
 
-    def get_all_users(self):
-        """GET all users — list validation"""
-        url = f"{self.BASE_URL}/users"
-        response = requests.get(url)
-        return response
+    def get_product(self, product_id):
+        """GET single product by ID"""
+        url = f"{self.BASE_URL}/posts/{product_id}"
+        return requests.get(url)
 
-    def create_user(self, name, job):
-        """POST create new user"""
+    def get_all_products(self):
+        """GET all products — catalogue listing"""
+        url = f"{self.BASE_URL}/posts"
+        return requests.get(url)
+
+    def create_product(self, title, body):
+        """POST create new product listing"""
         url = f"{self.BASE_URL}/posts"
         payload = {
-            "name": name,
-            "job": job,
+            "title": title,
+            "body": body,
             "userId": 1
         }
-        response = requests.post(url, json=payload)
-        return response
+        return requests.post(url, json=payload)
 
-    def update_user(self, user_id, name, job):
-        """PUT update existing user"""
-        url = f"{self.BASE_URL}/posts/{user_id}"
+    def update_product(self, product_id, title, body):
+        """PUT update existing product details"""
+        url = f"{self.BASE_URL}/posts/{product_id}"
         payload = {
-            "name": name,
-            "job": job
+            "title": title,
+            "body": body,
+            "userId": 1
         }
-        response = requests.put(url, json=payload)
-        return response
+        return requests.put(url, json=payload)
 
-    def delete_user(self, user_id):
-        """DELETE user by ID"""
-        url = f"{self.BASE_URL}/posts/{user_id}"
-        response = requests.delete(url)
-        return response
+    def delete_product(self, product_id):
+        """DELETE product by ID"""
+        url = f"{self.BASE_URL}/posts/{product_id}"
+        return requests.delete(url)
+
+    # ── USERS ────────────────────────────────────────────
+
+    def get_customer(self, customer_id):
+        """GET single customer by ID"""
+        url = f"{self.BASE_URL}/users/{customer_id}"
+        return requests.get(url)
+
+    def get_all_customers(self):
+        """GET all customers"""
+        url = f"{self.BASE_URL}/users"
+        return requests.get(url)

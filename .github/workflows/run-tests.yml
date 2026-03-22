@@ -1,4 +1,4 @@
-name: Payment Gateway Automation Tests
+name: E-Commerce Automation Tests
 
 on:
   push:
@@ -24,8 +24,8 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
-      - name: Run smoke and API tests
-        run: pytest -m "smoke and not db" -v --html=reports/html/report.html --self-contained-html
+      - name: Run smoke tests
+        run: pytest -m "smoke" -v --html=reports/html/report.html --self-contained-html
 
       - name: Upload test report
         uses: actions/upload-artifact@v4

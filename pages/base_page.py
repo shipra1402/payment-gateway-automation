@@ -59,9 +59,16 @@ class BasePage:
         except TimeoutException:
             return False
 
+    # ── WAIT FOR CLICKABLE ──────────────────────────────
+    def wait_for_element_clickable(self, by, locator):
+        """Wait until element is clickable — use after menu animations"""
+        return self.wait.until(
+            EC.element_to_be_clickable((by, locator))
+        )
+
     # ── IFRAME HANDLING ─────────────────────────────────
     def switch_to_frame(self, by, locator):
-        """Switch into iframe — needed for Razorpay popup"""
+        """Switch into iframe — needed for embedded forms or popups"""
         logger.info("Switching into iframe")
         self.wait.until(
             EC.frame_to_be_available_and_switch_to_it((by, locator))

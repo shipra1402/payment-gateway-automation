@@ -44,12 +44,12 @@ def driver(config):
     )
     drv.get(config["BASE"]["url"])
     yield drv          # test runs here
-    drv.quit()          # always runs after test — pass or fail
+    drv.quit()         # always runs after test — pass or fail
 
 
 # ══════════════════════════════════════════════════
 #  FIXTURE 3 — API Session
-#  Creates requests session with Razorpay auth
+#  Creates requests session for REST API tests
 # ══════════════════════════════════════════════════
 @pytest.fixture(scope="session")
 def api_session(config):
@@ -64,25 +64,6 @@ def api_session(config):
 
 
 # ══════════════════════════════════════════════════
-#  FIXTURE 4 — MySQL DB Connection
-#  Connects to MySQL before test, closes after
-# ══════════════════════════════════════════════════
-@pytest.fixture(scope="function")
-def db_connection(config):
-    import pymysql
-    conn = pymysql.connect(
-        host=config["DATABASE"]["host"],
-        port=int(config["DATABASE"]["port"]),
-        user=config["DATABASE"]["user"],
-        password=config["DATABASE"]["password"],
-        database=config["DATABASE"]["database"],
-        cursorclass=pymysql.cursors.DictCursor
-    )
-    yield conn          # test uses this connection
-    conn.close()        # always closes — no connection leak
-
-
-# ══════════════════════════════════════════════════
 #  HOOK — Screenshot on every test failure
 #  Auto-saves PNG to reports/screenshots/
 # ══════════════════════════════════════════════════
@@ -94,7 +75,7 @@ def pytest_runtest_makereport(item, call):
         drv = item.funcargs.get("driver")
         if drv:
             ts   = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-            name = item.name.replace("[","_").replace("]","")
+            name = item.name.replace("[", "_").replace("]", "")
             path = f"reports/screenshots/{name}_{ts}.png"
             os.makedirs("reports/screenshots", exist_ok=True)
             drv.save_screenshot(path)
